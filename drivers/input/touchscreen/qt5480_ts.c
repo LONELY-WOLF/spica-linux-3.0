@@ -692,6 +692,15 @@ static void qt5480_report_input(struct qt5480 *qt)
 		input_mt_sync(dev);
 	}
 
+	//For single touch support
+	input_report_key(dev, BTN_TOUCH, touch[0].status == QT5480_MOVE);
+
+	if (touch[0].status == QT5480_MOVE) {
+		input_report_abs(dev, ABS_X, touch[0].pos_x);
+		input_report_abs(dev, ABS_Y, touch[0].pos_y);
+	}
+	//End
+
 	input_sync(dev);
 }
 
@@ -940,6 +949,13 @@ static int __devinit qt5480_probe(struct i2c_client *client,
 	input_dev->dev.parent = &client->dev;
 
 	set_bit(EV_ABS, input_dev->evbit);
+	//Single touch support
+	set_bit(EV_KEY, input_dev->evbit);
+	set_bit(BTN_TOUCH, input_dev->keybit);
+
+	input_set_abs_params(input_dev, ABS_X, 0, QT5480_MAX_XC, 0, 0);
+	input_set_abs_params(input_dev, ABS_Y, 0, QT5480_MAX_YC, 0, 0);
+	//End
 
 	input_set_abs_params(input_dev, ABS_MT_WIDTH_MAJOR,
 						0, QT5480_MAX_WIDTH, 0, 0);
