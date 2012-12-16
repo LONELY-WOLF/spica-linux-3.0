@@ -32,6 +32,11 @@
 
 #include <linux/input/qt5480_ts.h>
 
+#ifdef CONFIG_TOUCHSCREEN_QT5480_BOTH
+#define CONFIG_TOUCHSCREEN_QT5480_SINGLETOUCH
+#define CONFIG_TOUCHSCREEN_QT5480_MULTITOUCH
+#endif
+
 /*
  * QT5480 register definitions
  */
@@ -670,6 +675,7 @@ static void qt5480_report_input(struct qt5480 *qt)
 	struct input_dev* dev = qt->input_dev;
 	int id;
 
+#ifdef CONFIG_TOUCHSCREEN_QT5480_MULTITOUCH
 	for (id = 0; id < QT5480_MAX_FINGER; ++id) {
 		if (!touch[id].status)
 			continue;
@@ -691,15 +697,16 @@ static void qt5480_report_input(struct qt5480 *qt)
 		input_report_abs(dev, ABS_MT_TRACKING_ID, id);
 		input_mt_sync(dev);
 	}
+#endif
 
-	//For single touch support
+#ifdef CONFIG_TOUCHSCREEN_QT5480_SINGLETOUCH
 	input_report_key(dev, BTN_TOUCH, touch[0].status == QT5480_MOVE);
 
 	if (touch[0].status == QT5480_MOVE) {
 		input_report_abs(dev, ABS_X, touch[0].pos_x);
 		input_report_abs(dev, ABS_Y, touch[0].pos_y);
 	}
-	//End
+#endif
 
 	input_sync(dev);
 }
@@ -949,14 +956,16 @@ static int __devinit qt5480_probe(struct i2c_client *client,
 	input_dev->dev.parent = &client->dev;
 
 	set_bit(EV_ABS, input_dev->evbit);
-	//Single touch support
+
+#ifdef CONFIG_TOUCHSCREEN_QT5480_SINGLETOUCH
 	set_bit(EV_KEY, input_dev->evbit);
 	set_bit(BTN_TOUCH, input_dev->keybit);
 
 	input_set_abs_params(input_dev, ABS_X, 0, QT5480_MAX_XC, 0, 0);
 	input_set_abs_params(input_dev, ABS_Y, 0, QT5480_MAX_YC, 0, 0);
-	//End
+#endif
 
+#ifdef CONFIG_TOUCHSCREEN_QT5480_MULTITOUCH
 	input_set_abs_params(input_dev, ABS_MT_WIDTH_MAJOR,
 						0, QT5480_MAX_WIDTH, 0, 0);
 	input_set_abs_params(input_dev, ABS_MT_PRESSURE,
@@ -967,6 +976,7 @@ static int __devinit qt5480_probe(struct i2c_client *client,
 						0, QT5480_MAX_YC, 0, 0);
 	input_set_abs_params(input_dev, ABS_MT_TRACKING_ID, 0,
 						QT5480_MAX_FINGER - 1, 0, 0);
+#endif
 
 	input_set_drvdata(input_dev, qt);
 
