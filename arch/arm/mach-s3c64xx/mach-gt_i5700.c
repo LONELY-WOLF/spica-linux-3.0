@@ -1062,13 +1062,21 @@ static struct platform_device spica_ram_console = {
 /*
  * Matrix keyboard (FIXME: Assign standard key codes)
  */
-
+//Android key codes
+//static uint32_t spica_keymap[] __initdata = {
+//	/* KEY(row, col, keycode) */
+//	KEY(0, 0, 209), KEY(0, 1, 217) /*  Reserved  */ /*  Reserved  */,
+//	KEY(1, 0, 210), KEY(1, 1, 218), KEY(1, 2, 226), KEY(1, 3, 234),
+//	KEY(2, 0, 211), KEY(2, 1, 219), KEY(2, 2, 227), KEY(2, 3, 235),
+//	KEY(3, 0, 212), KEY(3, 1, 220) /*  Reserved  */, KEY(3, 3, 236),
+//};
+//F13+ key codes
 static uint32_t spica_keymap[] __initdata = {
 	/* KEY(row, col, keycode) */
-	KEY(0, 0, 201), KEY(0, 1, 209) /* Reserved  */ /* Reserved  */,
-	KEY(1, 0, 202), KEY(1, 1, 210), KEY(1, 2, 218), KEY(1, 3, 226),
-	KEY(2, 0, 203), KEY(2, 1, 211), KEY(2, 2, 219), KEY(2, 3, 227),
-	KEY(3, 0, 204), KEY(3, 1, 212) /* Reserved  */, KEY(3, 3, 228),
+	KEY(0, 0, 191), KEY(0, 1, 192) /* Reserved  */ /* Reserved  */,
+	KEY(1, 0, 103), KEY(1, 1, 108), KEY(1, 2, 105), KEY(1, 3, 185),
+	KEY(2, 0, 106), KEY(2, 1, 183), KEY(2, 2, 187), KEY(2, 3, 186),
+	KEY(3, 0,  28), KEY(3, 1, 184) /* Reserved  */, KEY(3, 3, 190),
 };
 
 static struct matrix_keymap_data spica_keymap_data __initdata = {
@@ -1091,7 +1099,7 @@ static struct samsung_keypad_platdata spica_keypad_pdata __initdata = {
 static struct gpio_keys_button spica_gpio_keys_data[] = {
 	{
 		.gpio			= GPIO_POWER_N,
-		.code			= 249,
+		.code			= 188, //F18
 		.desc			= "Power",
 		.active_low		= 1,
 		.debounce_interval	= 5,
@@ -1099,7 +1107,7 @@ static struct gpio_keys_button spica_gpio_keys_data[] = {
 		.wakeup			= 1,
 	}, {
 		.gpio			= GPIO_HOLD_KEY_N,
-		.code			= 251,
+		.code			= 189, //F19
 		.desc			= "Hold",
 		.active_low		= 1,
 		.debounce_interval	= 5,
