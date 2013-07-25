@@ -49,8 +49,8 @@
 
 #include "spica_dpram.h"
 
-char fw_path[2048];
-module_param_string(fw_path, fw_path, 2048, 0);
+char modem_fw_path[2048];
+module_param_string(modem_fw_path, modem_fw_path, 2048, 0);
 
 #define DEFAULT_FW_PATH	"/radio/modem.bin"
 
@@ -487,7 +487,7 @@ static int dpram_phone_image_read(struct dpram *dpr)
 	int len;
 	int pos;
 
-	filp = filp_open(fw_path, O_RDONLY, 0);
+	filp = filp_open(modem_fw_path, O_RDONLY, 0);
 	if (IS_ERR(filp)) {
 		dev_err(dpr->dev, "Failed to open modem firmware.\n");
 		return PTR_ERR(filp);
@@ -3018,8 +3018,8 @@ static struct platform_driver dpram_driver = {
  */
 static int __init dpram_init(void)
 {
-	if (!strlen(fw_path))
-		strncpy(fw_path, DEFAULT_FW_PATH, sizeof(fw_path));
+	if (!strlen(modem_fw_path))
+		strncpy(modem_fw_path, DEFAULT_FW_PATH, sizeof(modem_fw_path));
 
 	return platform_driver_probe(&dpram_driver, dpram_probe);
 }
