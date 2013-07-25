@@ -1912,6 +1912,10 @@ static struct platform_device spica_jack_device = {
 	},
 };
 
+static struct platform_device spica_bt_pcm_device = {
+	.name = "dfbmcs320",
+};
+
 static struct gt_i5700_audio_pdata spica_audio_pdata = {
 	.set_micbias	= snd_set_mic_bias,
 };
@@ -1994,6 +1998,7 @@ static struct platform_device *spica_devices[] __initdata = {
 	&spica_dpram_device,
 	&spica_vibetonz_device,
 	&spica_jack_device,
+	&spica_bt_pcm_device,
 	&spica_audio_device,
 	&spica_bml_device,
 	&spica_led,
@@ -2312,7 +2317,7 @@ static struct s3c_pin_cfg_entry spica_pin_config[] __initdata = {
 	S3C_PIN(GPIO_TOUCH_INT_N), S3C_PIN_IN, S3C_PIN_PULL(NONE),
 	S3C_PIN(GPIO_BT_HOST_WAKE), S3C_PIN_IN, S3C_PIN_PULL(DOWN),
 	S3C_PIN(GPIO_TA_CHG_N), S3C_PIN_IN, S3C_PIN_PULL(NONE),
-	S3C_PIN(GPIO_ONEDRAM_INT_N), S3C_PIN_IN, S3C_PIN_PULL(NONE),
+	S3C_PIN(GPIO_ONEDRAM_INT_N), S3C_PIN_IN, S3C_PIN_PULL(UP),
 	S3C_PIN(GPIO_WLAN_HOST_WAKE), S3C_PIN_IN, S3C_PIN_PULL(DOWN),
 	S3C_PIN(GPIO_MSENSE_INT), S3C_PIN_IN, S3C_PIN_PULL(NONE),
 	S3C_PIN(GPIO_ACC_INT), S3C_PIN_IN, S3C_PIN_PULL(NONE),
