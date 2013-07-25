@@ -1954,18 +1954,12 @@ int snd_soc_dapm_put_volsw(struct snd_kcontrol *kcontrol,
 	int wi;
 
 	val = (ucontrol->value.integer.value[0] & mask);
+	connect = !!val;
 
 	if (invert)
 		val = max - val;
 	mask = mask << shift;
 	val = val << shift;
-
-	if (val)
-		/* new connection */
-		connect = invert ? 0 : 1;
-	else
-		/* old connection must be powered down */
-		connect = invert ? 1 : 0;
 
 	mutex_lock(&codec->mutex);
 
@@ -2634,7 +2628,7 @@ void snd_soc_dapm_shutdown(struct snd_soc_card *card)
 {
 	struct snd_soc_codec *codec;
 
-	list_for_each_entry(codec, &card->codec_dev_list, list) {
+	list_for_each_entry(codec, &card->codec_dev_list, card_list) {
 		soc_dapm_shutdown_codec(&codec->dapm);
 		if (codec->dapm.bias_level == SND_SOC_BIAS_STANDBY)
 			snd_soc_dapm_set_bias_level(&codec->dapm,
